@@ -1,7 +1,8 @@
 1. Music recommendation based on mood
 
 2. Song analysis tool
-Use Spotify API and IBM Watson API to create an app that analyzes the lyrics of a song and provides insights about the song's sentiment, emotion, and tone.
+Use Spotify API and IBM Watson API to create an app that analyzes the lyrics of a song and provides insights about the song's sentiment, emotion, and tone. 
+The user can log in through either Spotify or Google (depending on which one we implement). The user profile will be stored in the database, and calls will be cached in the database as well.
 
 3. Party music selector
 Use Spotify API and Echo Nest API to create an app that selects the best party music based on the party's mood, energy, and tempo. The app can also allow the user to adjust the music settings to their preference.

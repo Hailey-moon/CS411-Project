@@ -6,32 +6,48 @@
     Connection between the two APIs:
 
       Using the current weather, spotify will return a playlist curated by the users likes as well as the mood interpreted by the weather.
-      The mood of the playlist will change according to weather by looking at values such as condition, temp, cloud, precipitation to then alter the values
-      in the customizability of the get recommendations endpoint, such as a lower valence and energy during rainy days, and a higher liveness and tempo during more sunny days for more upbeat tracks.
+      The mood of the playlist will change according to weather by looking at values such as condition, temp, cloud, precipitation to then 
+      alter the values in the customizability of the get recommendations endpoint, such as a lower valence and energy during rainy days,
+      and a higher liveness and tempo during more sunny days for more upbeat tracks.
 
     Curating Based off Users Liked Tracks/Albums/Artists:
 
-      After gaining authorization, we are able to use the Get Users Top Items endpoint to return a set number of the users top artists or tracks, which contains seeds for the artists and genres that can be
-      used to curate the playlist for the specific user.
+      After gaining authorization, we are able to use the Get Users Top Items endpoint to return a set number of the users top artists or 
+      tracks, which contains seeds for the artists and genres that can be used to curate the playlist for the specific user.
 
     Alteration of customizability values according to the weather:
 
-      To ensure how the customizability values change with the weather, we would have to code the range of values in which certain weather values would be in. An example of this would be to lower the valence
-      when precipitation increases or to increase the liveness as the clouds decrease.
+      To ensure how the customizability values change with the weather, we would have to code the range of values in which certain weather
+      values would be in. An example of this would be to lower the valence when precipitation increases or to increase the liveness as the
+      clouds decrease.
 
     Alteration of customizability values according to user's input:
 
-      If the user wants to change the mood of the playlist manually, they can also change the input values by entering the value in the prompt given. E.g., having a slider of value 0 to 1 for how upbeat the songs
-      should be.
+      If the user wants to change the mood of the playlist manually, they can also change the input values by entering the value in the prompt 
+      given. E.g., having a slider of value 0 to 1 for how upbeat the songs should be.
 
     Database:
 
-      The Database will store the return values of the Get User's Top Items endpoint (artist id, genres, etc) as well as the return value of the Get Recommendations endpoint (spotify url, artist name, etc)
-      which will then be used to create the playlist. It will also store certain values returned from the weather api to set the recommendations customizability values.
+      The Database will store the return values of the Get User's Top Items endpoint (artist id, genres, etc) as well as the return value of 
+      the Get Recommendations endpoint (spotify url, artist name, etc) which will then be used to create the playlist. It will also store certain 
+      values returned from the weather api to set the recommendations customizability values.
 
 2. Song analysis tool
-Use Spotify API and IBM Watson API to create an app that analyzes the lyrics of a song and provides insights about the song's sentiment, emotion, and tone. 
-The user can log in through either Spotify or Google (depending on which one we implement). The user profile will be stored in the database, and calls will be cached in the database as well.
+
+    Main idea: a web app that analyzes the lyrics of a song and provides deeper insights about the song's sentiment, emotion, and tone. 
+    
+    APIs: Spotify API and IBM Watson API
+    
+    Database: Keep user profile by caching the previously called API calls
+    
+    3rd party authorization: Spotify log-in
+    
+    Possible side features: 
+        - user input to suggest different interpretation of a given analysis
+        - "retry" button if user doesnt' like an analysis
+        - display previously analyzed songs to user profile
+        - save analysis results to user profile
+    
 
 3. Party music selector
 Use Spotify API and Echo Nest API to create an app that selects the best party music based on the party's mood, energy, and tempo. The app can also allow the user to adjust the music settings to their preference.

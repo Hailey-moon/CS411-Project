@@ -1,1 +1,7 @@
+As a user, I want the recommended songs to be based on my preferred artists and genres, as well as the current weather conditions.
 
+Narrative:
+- The user opens the app and is directed to the 'log-in' or 'sign-up' page if not already logged in.
+- If new user, is then displayed text asking for authorization to access the user's Spotify profile.
+- If accepted, the user is then directed to the home page.
+- The home page displays recommended songs and playlists based on the data collected using Spotify's API.

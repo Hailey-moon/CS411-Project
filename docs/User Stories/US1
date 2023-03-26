@@ -1,0 +1,10 @@
+User Story 1: 
+As a user, I want to log in to the web app using my Spotify account to access my personalized music recommendations based on my listening activities and the weather.
+
+Narrative: 
+- The user enters the home page
+- There is a log-in and sign-up button next to each other that takes us to the corresponding log-in or sign-up page. 
+- User clicks on the log-in button because they already have an account.
+- The log-in page has "log-in with Spotify" button, a third paty authorization so that we can access their Spotify data. 
+- The user clicks on the "log in with Spotify" button. They are redirected to the Spotify login page where they enter their Spotify username and password. 
+- After successful authentication, they are redirected back to the web app and their Spotify account is connected.

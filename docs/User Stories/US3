@@ -1,1 +1,7 @@
 
+User Story 5: As a user, I want to view the details of each music recommendation, including the artist, album, and song name.
+
+Narrative: 
+-The user can click on each music recommendation to view the details of the artist, album, and song name. 
+-They are presented with a page that displays the details of the selected recommendation. 
+-If something goes wrong, the user is alerted with an error message indicating that the details could not be retrieved.

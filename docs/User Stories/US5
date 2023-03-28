@@ -1,0 +1,5 @@
+User Story: As a user, I want to manually adjust the mood of my music recommendations by changing the input values.
+Narrative: 
+-The user is presented with a slider that allows them to manually adjust the mood of their music recommendations.
+-They can slide the slider from 0 to 1 to indicate how upbeat or relaxed they want their music to be. 
+-Once the slider is adjusted, the recommendations are updated in real-time.

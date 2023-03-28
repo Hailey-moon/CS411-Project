@@ -1,0 +1,5 @@
+User Story 2: As a user, I want to provide my preferred music genres and artists to the web app to customize my music recommendations.
+Narrative: 
+-After logging in, the user is presented with a form where they can enter their preferred music genres and artists. 
+-They can either select from a pre-defined list or manually enter their preferences.
+-Once submitted, the user's preferences are stored in the web app's database.

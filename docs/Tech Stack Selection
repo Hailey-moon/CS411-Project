@@ -1,45 +1,30 @@
 Introduction:
 Our team's project is a customized Spotify playlist based on the user's preferences and the current weather conditions. 
-This document outlines the rationale behind choosing React as our technology stack for this project after considering two main options: Node.js and Django.
+This document outlines the rationale behind choosing our technology stack for this project after considering two main options.
 
 Technology Stack Consideration:
 
-Node.js:
--Node.js is a popular open-source JavaScript runtime environment that enables JavaScript to run on the server side. 
--It's built on Chrome's V8 JavaScript engine and is known for excellent performance and scalability. 
--Node.js is great for quick development of web applications, which could be helpful for our project.
+Frontend: React
+Backend: Node.js with Express
 
-Django:
--Django is a high-level Python web framework that is good for quick development as well as practical design.
--It is known for its secure architecture, making it good for building reliable web applications.
+Frontend: React
+Backend: Django with Django REST Framework
 
-The Selection Process and Reasoning:
+Reasoning:
 
-During the decision-making process, we evaluated the technology stacks based on the following factors:
+After considering both options, we decided to choose the combination of React for the frontend and Node.js with Express for the backend for the 
+following reasons:
 
-a. Ease of use and learning curve
-b. Flexibility and customizability
-c. Integration with APIs and third-party libraries
-d. Performance and scalability
-e. Community support and ecosystem
+-Uniformity in language: Using JavaScript for both frontend (React) and backend (Node.js) will simplify the development process and ensure a more
+coherent codebase.
 
-We chose React as our tech stack after considering these factors for the following reasons:
+-Flexibility and scalability: Node.js with Express is a lightweight and flexible solution, and will make it easy for us to build our application.
 
-Component-based architecture: It's architecture promotes reusability and modularity. 
-These factors will make it easier to build our application.
+-Seamless integration with APIs: Node.js allows for efficient handling of asynch operations. It will simplify the integration with Spotify
+and Weather APIs.
 
-Seamless integration with APIs: React's ability to handle asynchronous operations makes working with the Spotify and Weather APIs easier.
-It will allow us to fetch and manage data efficiently.
+-Strong community support and ecosystem: React and Node.js both have active communities that provide open-source libraries and other 
+resources that will make our development process easier and quicker. 
 
-Performance optimization: React's virtual DOM implementation provides a responsive and smooth user experience.
-
-Strong community support and ecosystem: React has a vast and active community that offers various open-source libraries and resources, 
-which can help us in our development process.
-
-Flexibility and customizability: React allows us to fine-tune the application as needed, providing us with flexibility while designing user interfaces. 
-
-Conclusion:
-
-After considering both Node.js and Django, we chose React as our technology stack for the project. React's component-based architecture, 
-seamless API integration, performance optimization, strong community support, and flexibility make it a suitable choice for our project 
-requirements and will allow us to deliver a high-quality application on time.
+Overall, using React for the frontend and Node.js with Express for the back end is a more cohesive and efficient technology stack for 
+our project requirements.

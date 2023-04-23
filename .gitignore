@@ -19,6 +19,8 @@
 .env.production.local
 **/.env
 **/env
+**/flask_session
+**/__pycache__
 
 
 npm-debug.log*

@@ -1,30 +1,36 @@
 # CS411-Project
 
-# You might need to run these?
+# Setup
+
+Frontend setup:
+
 `yarn add react react-dom react-scripts`
 
-`yarn init -y`
+Please follow these instructions to set-up the backend on your local dev environment:
 
-`yarn add express cors dotenv node-fetch`
-
-# Before you start, make sure of these:
-
-1. Make sure you're in `client` by `cd client` to make changes to the application. Anything outside of `client` is not related to the function fo the app.
-
-2. This repo comes with `env` file that sets your environmental variables, like API keys. Make a copy of this in the root of `client` and name it `.env`. This will allow the document to be ignored by git, so you don't push sensitive information like passwords to GitHub.
-
-3. In the .env, fill in your api key by making your own account for apis. See "APIs used" section for more information on this.
+1. Please cd into pythonBackend
+2. Run this following command: `python3 -m venv env`
+3. Start the python virtual environment: `source env/bin/activate`
+4. Install all required packages: `pip3 install -r requirements.txt`
+5. Setup the cred.py with the right keys
 
 # To start the app,
-`cd client`
 
 To start the frontend server, run this in your terminal:
 
-`yarn start`
+`cd prototype`
+
+`npm start`
 
 To start the backend server, open another terminal window and run:
 
-`node server.js`
+`cd pythonBackend`
+
+`python3 backend.py`
+
+# When you're done
+
+After you are done, deactivate the python environment: `deactivate`
 
 # APIs used:
 

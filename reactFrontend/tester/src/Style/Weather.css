@@ -1,12 +1,11 @@
 /* WeatherForm.css */
-.container {
-    display: flex;
+.WeatherContainer {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  font-family: 'Circular Std', sans-serif;
-    color: #000;
+  min-height: 50vh;
+  color: white;
 }
 
 form {
@@ -27,10 +26,6 @@ form {
   }
   
   form input[type="submit"] {
-    background-color: #1db954;
-    border: none;
-    border-radius: 20px;
-    color: #fff;
     font-size: 18px;
     padding: 10px 20px;
   }

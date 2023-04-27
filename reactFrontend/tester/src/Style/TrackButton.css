@@ -1,25 +1,27 @@
-.container {
+.track-container {
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
   display: flex;
   align-items: center;
   margin: 1rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  padding: 1rem;
   max-height: 100px;
+  width: 200px;
 }
 
 .album-cover {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 4px;
-  object-fit: cover;
-  margin-right: 1rem;
+  /* object-fit: cover;
+  margin-right: 1rem; */
 }
 
 .track-info {
   display: flex;
   flex-direction: column;
+  margin: 10px;
   color: white;
 }
 

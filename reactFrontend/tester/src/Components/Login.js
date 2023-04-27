@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import '../Style/Login.css';
 
 function Button() {
   const handleClick = () => {
@@ -7,8 +7,8 @@ function Button() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <button className="button" onClick={handleClick}>
+    <div className='login'>
+      <button className='logInButton button' onClick={handleClick}>
         LOGIN WITH SPOTIFY
       </button>
     </div>

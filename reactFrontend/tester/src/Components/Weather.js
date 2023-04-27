@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './Weather.css';
+import '../Style/Weather.css';
+import '../Style/App.css'
 
 const WeatherForm = () => {
     const [city, setCity] = useState('');
@@ -13,7 +14,7 @@ const WeatherForm = () => {
     }
 
     return (
-        <div className="container">
+        <div className="WeatherContainer">
             <form onSubmit={handleSubmit}>
                 <div className="input-group">
                         <input
@@ -22,7 +23,7 @@ const WeatherForm = () => {
                             onChange={event => setCity(event.target.value)}
                             placeholder="Input City Name"
                         />
-                    <input type="submit" value="Get Weather" />
+                    <input className='button' type="submit" value="GET WEATHER" />
                 </div>
             </form>
             {weatherData && (

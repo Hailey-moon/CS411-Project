@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'Circular Std';
+  src: url('./circular-std-medium-500.ttf') format('truetype');
+}
+
+* {
+  background-color: #212121;
+  font-family: 'Circular Std';
+}
+
+.button {
+  min-width: 30%;
+  max-width: 50%;
+  background-color: #1DB954;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 500px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: #1AA34A; 
+}
+.button:active {
+  background-color: #1AA34A;
+}

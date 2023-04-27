@@ -1,5 +1,5 @@
 import React from 'react';
-import './TrackButton.css';
+import '../Style/TrackButton.css';
 
 function TrackButton({ track }) {
   const handleClick = () => {
@@ -7,8 +7,8 @@ function TrackButton({ track }) {
   };
 
   return (
-    <div className="container" onClick={handleClick}>
-      <img src={track.album_cover_url} alt={track.name + " album cover"} className="album-cover" />
+    <div className="track-container" onClick={handleClick}>
+      <img className="album-cover" src={track.album_cover_url} alt={track.name + " album cover"} />
       <div className="track-info">
         <div className="track-name">{track.name}</div>
         <div className="artist-name">{track.artist}</div>

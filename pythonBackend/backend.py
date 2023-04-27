@@ -120,8 +120,7 @@ def home():
         seed_artists = [artist['id'] for artist in top_artists['items']]
         seed_tracks = [track['id'] for track in top_tracks['items']]
         recommendations = get_recommendations(seed_artists=seed_artists, seed_tracks=seed_tracks, access_token=access_token)
-
-        track_urls = [{'name': track['name'], 'external_url': track['external_urls']['spotify']} for track in recommendations['tracks']]
+        track_urls = [{'name': track['name'], 'external_url': track['external_urls']['spotify'], 'album_cover_url': track['album']['images'][0]['url']} for track in recommendations['tracks']]
         return jsonify(track_urls)
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)})

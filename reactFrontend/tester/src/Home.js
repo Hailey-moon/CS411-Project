@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
-function TrackButton({ track }) {
-  const handleClick = () => {
-    window.open(track.external_url);
-  };
-
-  return (
-    <button onClick={handleClick} style={{ width: '100px', height: '100px' }}>
-      {track.name}
-    </button>
-  );
-}
+import WeatherForm from "./Weather"
+import TrackButton from './TrackButton';
 
 function Home() {
     const [access_token, setAccessToken] = useState(null);
@@ -44,9 +34,10 @@ function Home() {
   
     return (
       <div>
+        {/* <WeatherForm /> */}
         {tracks.map(track => (
           <TrackButton key={track.name} track={track} />
-        ))}
+          ))}
       </div>
     );
   }

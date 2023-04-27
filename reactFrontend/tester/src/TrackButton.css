@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  max-height: 100px;
+}
+
+.album-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.track-name,
+.artist-name {
+  margin: 0;
+}

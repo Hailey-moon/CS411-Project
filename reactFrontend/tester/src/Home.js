@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Logout from './Logout'
 
 function TrackButton({ track }) {
   const handleClick = () => {
@@ -44,6 +45,9 @@ function Home() {
   
     return (
       <div>
+        <div style={{ textAlign: 'right' }}>
+        <Logout />
+      </div>
         {tracks.map(track => (
           <TrackButton key={track.name} track={track} />
         ))}

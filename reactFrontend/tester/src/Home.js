@@ -34,7 +34,7 @@ function Home() {
   
     return (
       <div>
-        {/* <WeatherForm /> */}
+        <WeatherForm />
         {tracks.map(track => (
           <TrackButton key={track.name} track={track} />
           ))}

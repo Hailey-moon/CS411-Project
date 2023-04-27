@@ -1,4 +1,5 @@
 import "../Style/App.css"
+import"../Style/Logout.css"
 
 function LogoutButton() {
     const handleClick = () => {
@@ -6,7 +7,7 @@ function LogoutButton() {
     };
   
     return (
-      <button className="button logOutButton" onClick={handleClick}>
+      <button className="logoutButton logOutButton" onClick={handleClick}>
         LOGOUT
       </button>
     );

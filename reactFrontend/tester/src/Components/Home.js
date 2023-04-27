@@ -35,10 +35,10 @@ function Home() {
   
     return (
       <div>
-        <WeatherForm />
         <div style={{ textAlign: 'right' }}>
           <Logout />
         </div>
+        <WeatherForm />
         {tracks.map(track => (
           <TrackButton key={track.name} track={track} />
           ))}

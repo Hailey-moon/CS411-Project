@@ -62,7 +62,6 @@ def callback():
 	# put this into the session
 	session['code'] = code
 	print('Session is: ', session)
-	print(f'code is created')
 	auth_header = base64.b64encode(f"{cred.client_id}:{cred.client_secret}".encode("ascii"))
 	headers = {"Authorization": f"Basic {auth_header.decode('ascii')}"}
 
@@ -71,19 +70,18 @@ def callback():
 		"code": code,
 		"redirect_uri": cred.redirect_url
 	}
-	print(f"bruh")
 	response = requests.post("https://accounts.spotify.com/api/token", data=params, headers=headers)
 	response_data = response.json()
-
+        
 	access_token = response_data["access_token"]
 	refresh_token = response_data["refresh_token"]
 
 	# Store the access token and refresh token in the session
+	print("Access token:", access_token)
 	session["access_token"] = access_token
 	session["refresh_token"] = refresh_token
-	print(f'meow')
 	# Redirect to the index page
-	new_url = 'http://localhost:5001/home'
+	new_url = 'http://localhost:3000/home'
 	print(f"Redirecting to {new_url}")
 	return redirect(new_url)
 
@@ -110,7 +108,8 @@ def get_recommendations(seed_artists=None, seed_genres=None, seed_tracks=None, a
 
 @app.route('/home')
 def home():
-    access_token = session.get('access_token')
+    access_token = request.args.get("access_token")
+	
     if not access_token:
         return jsonify({'error': 'Missing access token'})
 

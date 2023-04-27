@@ -17,7 +17,7 @@ function Home() {
     const [tracks, setTracks] = useState([]);
   
     useEffect(() => {
-      fetch('http://localhost:5001/access_token')
+      fetch('http://localhost:5001/access_token', { credentials: 'include' })
         .then(response => response.json())
         .then(data => {
           console.log('access_token response:', data);
@@ -30,9 +30,17 @@ function Home() {
         console.log('access_token:', access_token);
         fetch(`http://localhost:5001/home?access_token=${access_token}`)
           .then(response => response.json())
-          .then(data => setTracks(data));
+          .then(data => {
+            console.log('data from API:', data);
+            if (!data.error) {
+              setTracks(data);
+            }
+          });
+      } else {
+        console.log("Access token is not available yet");
       }
     }, [access_token]);
+    
   
     return (
       <div>

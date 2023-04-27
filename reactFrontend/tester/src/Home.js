@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WeatherForm from "./Weather"
 import TrackButton from './TrackButton';
+import Logout from './Logout'
 
 function Home() {
     const [access_token, setAccessToken] = useState(null);
@@ -35,6 +36,9 @@ function Home() {
     return (
       <div>
         <WeatherForm />
+        <div style={{ textAlign: 'right' }}>
+          <Logout />
+        </div>
         {tracks.map(track => (
           <TrackButton key={track.name} track={track} />
           ))}

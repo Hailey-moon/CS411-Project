@@ -18,7 +18,7 @@ Please follow these instructions to set-up the backend on your local dev environ
 
 To start the frontend server, run this in your terminal:
 
-`cd prototype`
+`cd reactFrontend/tester`
 
 `npm start`
 
@@ -37,3 +37,5 @@ After you are done, deactivate the python environment: `deactivate`
 Taking user input of city and getting lat and lon: https://openweathermap.org/api/geocoding-api
 
 Taking lat and lon and fetching weather data for that location: https://openweathermap.org/current
+
+Spotify apis: https://developer.spotify.com/

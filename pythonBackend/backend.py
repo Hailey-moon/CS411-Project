@@ -20,7 +20,6 @@ app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read('config.cfg')
 app.secret_key = config.get('flask', 'secret_key')
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["CORS_HEADERS"] = "Content-Type"
@@ -28,6 +27,14 @@ app.config["CORS_HEADERS"] = "Content-Type"
 
 Session(app)
 cors = CORS(app, origins=["http://127.0.0.1:3000", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173", "http://localhost:5001"], supports_credentials=True)
+
+
+@app.route('/get-recommendations/<city>')
+@cross_origin(supports_credentials=True)
+def get_recommendations_route(city):
+    access_token = request.args.get('access_token')
+    recommendations = get_recommendations(city, access_token=access_token)
+    return recommendations
 
 
 @app.route('/new-login', methods=['GET', 'POST'])
@@ -92,26 +99,61 @@ def get_top(type, access_token):
     data = response.json()
     return data
 
-def get_recommendations(seed_artists=None, seed_genres=None, seed_tracks=None, access_token=None):
+def get_recommendations(city, seed_artists=None, seed_genres=None, seed_tracks=None, access_token=None):
+    weather_data = get_weather_data(city)
+    weather_data = weather_data.json
+    weather_condition = weather_data['weather'][0]['main'].lower()
+    temperature = weather_data['main']['temp']
+    wind_speed = weather_data['wind']['speed']
+    cloudiness = weather_data['clouds']['all']
+
+    # Energy level based on weather condition and temperature
+    if 'rain' in weather_condition or 'snow' in weather_condition or temperature < 10:
+        target_energy = 0.3  # Low energy for rainy, snowy or cold weather
+    elif 10 <= temperature < 20:
+        target_energy = 0.6  # Medium energy for moderate temperature
+    else:
+        target_energy = 0.8  # Higher energy for clear or warm weather
+
+    # Valence (positivity) based on wind speed and cloudiness
+    if wind_speed > 8 or cloudiness > 80:
+        target_valence = 0.4  # Low valence for windy or highly cloudy weather
+    else:
+        target_valence = 0.7  # Higher valence for calm or less cloudy weather
+
     headers = {'Authorization': f'Bearer {access_token}'}
-    params = {}
+    params = {
+        'target_energy': target_energy,
+        'target_valence': target_valence
+    }
+    top_artists = get_top('artists', access_token)
+    top_tracks = get_top('tracks', access_token)
+
+    seed_artists = [artist['id'] for artist in top_artists['items']]
+    seed_tracks = [track['id'] for track in top_tracks['items']]
     if seed_artists:
         params['seed_artists'] = seed_artists
     if seed_genres:
         params['seed_genres'] = seed_genres
     if seed_tracks:
         params['seed_tracks'] = seed_tracks
+    print(params)
     response = requests.get('https://api.spotify.com/v1/recommendations', headers=headers, params=params)
     response.raise_for_status()
     data = response.json()
     return data
 
+
 @app.route('/home')
 def home():
     access_token = request.args.get("access_token")
+    city = request.args.get("city")
 	
     if not access_token:
         return jsonify({'error': 'Missing access token'})
+
+    if not city:
+        return jsonify({'error': 'Missing city'})
 
     try:
         top_artists = get_top('artists', access_token)
@@ -119,11 +161,12 @@ def home():
 
         seed_artists = [artist['id'] for artist in top_artists['items']]
         seed_tracks = [track['id'] for track in top_tracks['items']]
-        recommendations = get_recommendations(seed_artists=seed_artists, seed_tracks=seed_tracks, access_token=access_token)
+        recommendations = get_recommendations(city, seed_artists=seed_artists, seed_tracks=seed_tracks, access_token=access_token)
         track_urls = [{'name': track['name'], 'external_url': track['external_urls']['spotify'], 'album_cover_url': track['album']['images'][0]['url']} for track in recommendations['tracks']]
-        return jsonify(track_urls)
+        return track_urls
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)})
+
 
 @app.route('/login-check')
 @cross_origin(supports_credentials=True)
@@ -175,7 +218,7 @@ def logout():
 
 @app.route('/get-weather/<city>')
 @cross_origin(supports_credentials=True)
-def weather(city):
+def get_weather_data(city):
     geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={cred.weather_key}'
     r = requests.get(geo_url)
     r = r.json()

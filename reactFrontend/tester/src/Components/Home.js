@@ -1,54 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import WeatherForm from "./Weather"
+import WeatherForm from './Weather';
 import TrackButton from './TrackButton';
-import Logout from './Logout'
+import Logout from './Logout';
+import '../Style/Home.css';
 
 function Home() {
-    const [access_token, setAccessToken] = useState(null);
-    const [tracks, setTracks] = useState([]);
-    const [city, setCity] = useState(null);
+  const [access_token, setAccessToken] = useState(null);
+  const [tracks, setTracks] = useState([]);
+  const [city, setCity] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
 
-    useEffect(() => {
-      fetch('http://localhost:5001/access_token', { credentials: 'include' })
+  useEffect(() => {
+    fetch('http://localhost:5001/access_token', { credentials: 'include' })
+      .then(response => response.json())
+      .then(data => {
+        setAccessToken(data.access_token);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (access_token && city) {
+      fetch(`http://localhost:5001/home?access_token=${access_token}&city=${city}`)
         .then(response => response.json())
         .then(data => {
-          console.log('access_token response:', data);
-          setAccessToken(data.access_token);
+          if (!data.error) {
+            setTracks(data);
+          }
         });
-    }, []);
-  
-   useEffect(() => {
-      if (access_token && city) {
-        console.log('access_token:', access_token);
-        console.log('city:', city);
-        fetch(`http://localhost:5001/home?access_token=${access_token}&city=${city}`)
-          .then(response => response.json())
-          .then(data => {
-            console.log('data from API:', data);
-            if (!data.error) {
-              setTracks(data);
-            }
-          });
-      } else {
-        console.log("Access token or city is not available yet");
-      }
-    }, [access_token, city]);
-    
-    const handleCityChange = (newCity) => {
-        setCity(newCity);
+
+      fetch(`http://localhost:5001/get-weather/${city}`)
+        .then(response => response.json())
+        .then(data => {
+          setWeatherData(data);
+        });
     }
-  
-    return (
-      <div>
-        <div style={{ textAlign: 'right' }}>
-          <Logout />
-        </div>
-        <WeatherForm access_token={access_token} onCityChange={handleCityChange} />
-        {tracks.map(track => (
-          <TrackButton key={track.name} track={track} />
-          ))}
+  }, [access_token, city]);
+
+  const handleCityChange = (newCity) => {
+    setCity(newCity);
+  };
+
+  return (
+    <div>
+      <div className='LogoutButton'>
+        <Logout />
       </div>
-    );
+      <WeatherForm
+        onCityChange={handleCityChange}
+        weatherData={weatherData}
+        access_token={access_token}
+      />
+      <div className='allTracksContainer'>
+        {tracks.map((track) => (
+          <TrackButton key={track.name} track={track} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default Home;

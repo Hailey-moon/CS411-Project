@@ -12,6 +12,7 @@ from flask import Flask, jsonify, make_response, session, redirect, request
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 import configparser
+import random
 
 
 
@@ -109,11 +110,14 @@ def get_recommendations(city, seed_artists=None, seed_genres=None, seed_tracks=N
 
     # Energy level based on weather condition and temperature
     if 'rain' in weather_condition or 'snow' in weather_condition or temperature < 10:
-        target_energy = 0.3  # Low energy for rainy, snowy or cold weather
+        # target_energy = 0.3  # Low energy for rainy, snowy or cold weather
+        target_energy = random.uniform(0, 0.3)
     elif 10 <= temperature < 20:
-        target_energy = 0.6  # Medium energy for moderate temperature
+        # target_energy = 0.6  # Medium energy for moderate temperature
+        target_energy = random.uniform(0.3, 0.6)
     else:
-        target_energy = 0.8  # Higher energy for clear or warm weather
+        # target_energy = 1.0  # Higher energy for clear or warm weather
+        target_energy = random.uniform(0.6, 1.0)
 
     # Valence (positivity) based on wind speed and cloudiness
     if wind_speed > 8 or cloudiness > 80:

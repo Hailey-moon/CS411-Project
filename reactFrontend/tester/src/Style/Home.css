@@ -1,0 +1,9 @@
+.LogoutButton {
+    text-align: right;
+}
+
+.allTracksContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;  
+}

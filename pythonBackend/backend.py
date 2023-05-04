@@ -14,7 +14,13 @@ from flask_session import Session
 import configparser
 import random
 
+# Firebase imports and initialization
+import firebase_admin
+from firebase_admin import credentials, firestore
 
+cred_firebase = credentials.Certificate('./spotify-weather-app-firebase-adminsdk-b0st6-63656bc401.json')
+firebase_admin.initialize_app(cred_firebase)
+db = firestore.client()
 
 SPOTIFY_BASE_URL = "https://api.spotify.com/v1"
 app = Flask(__name__)
@@ -25,6 +31,14 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["CORS_HEADERS"] = "Content-Type"
 
+# Firebase functions
+def save_user_profile(spotify_id, display_name):
+	user_ref = db.collection('users').document(spotify_id)
+	user_ref.set({
+		'spotify_id': spotify_id,
+		'display_name': display_name,
+	}, merge=True)
+
 
 Session(app)
 cors = CORS(app, origins=["http://127.0.0.1:3000", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173", "http://localhost:5001"], supports_credentials=True)
@@ -33,9 +47,9 @@ cors = CORS(app, origins=["http://127.0.0.1:3000", "http://localhost:3000", "htt
 @app.route('/get-recommendations/<city>')
 @cross_origin(supports_credentials=True)
 def get_recommendations_route(city):
-    access_token = request.args.get('access_token')
-    recommendations = get_recommendations(city, access_token=access_token)
-    return recommendations
+	access_token = request.args.get('access_token')
+	recommendations = get_recommendations(city, access_token=access_token)
+	return recommendations
 
 
 @app.route('/new-login', methods=['GET', 'POST'])
@@ -80,7 +94,7 @@ def callback():
 	}
 	response = requests.post("https://accounts.spotify.com/api/token", data=params, headers=headers)
 	response_data = response.json()
-        
+		
 	access_token = response_data["access_token"]
 	refresh_token = response_data["refresh_token"]
 
@@ -88,88 +102,106 @@ def callback():
 	print("Access token:", access_token)
 	session["access_token"] = access_token
 	session["refresh_token"] = refresh_token
+	
+	# Save the user profile in the Firestore database
+	
+	headers = {
+    'Authorization': 'Bearer ' + access_token
+}
+	response = requests.get('https://api.spotify.com/v1/me', headers=headers)
+
+	if response.status_code == 200:
+		user_data = response.json()
+		print(user_data)
+	else:
+		print('Error:', response.status_code, response.reason)
+		
+	spotify_id = user_data["id"]
+	display_name = user_data["display_name"]
+	save_user_profile(spotify_id, display_name)
+		
 	# Redirect to the index page
 	new_url = 'http://localhost:3000/home'
 	print(f"Redirecting to {new_url}")
 	return redirect(new_url)
 
 def get_top(type, access_token):
-    headers = {'Authorization': f'Bearer {access_token}'}
-    response = requests.get(f'https://api.spotify.com/v1/me/top/{type}', headers=headers)
-    response.raise_for_status()
-    data = response.json()
-    return data
+	headers = {'Authorization': f'Bearer {access_token}'}
+	response = requests.get(f'https://api.spotify.com/v1/me/top/{type}', headers=headers)
+	response.raise_for_status()
+	data = response.json()
+	return data
 
 def get_recommendations(city, seed_artists=None, seed_genres=None, seed_tracks=None, access_token=None):
-    weather_data = get_weather_data(city)
-    weather_data = weather_data.json
-    weather_condition = weather_data['weather'][0]['main'].lower()
-    temperature = weather_data['main']['temp']
-    wind_speed = weather_data['wind']['speed']
-    cloudiness = weather_data['clouds']['all']
+	weather_data = get_weather_data(city)
+	weather_data = weather_data.json
+	weather_condition = weather_data['weather'][0]['main'].lower()
+	temperature = weather_data['main']['temp']
+	wind_speed = weather_data['wind']['speed']
+	cloudiness = weather_data['clouds']['all']
 
-    # Energy level based on weather condition and temperature
-    if 'rain' in weather_condition or 'snow' in weather_condition or temperature < 10:
-        # target_energy = 0.3  # Low energy for rainy, snowy or cold weather
-        target_energy = random.uniform(0, 0.3)
-    elif 10 <= temperature < 20:
-        # target_energy = 0.6  # Medium energy for moderate temperature
-        target_energy = random.uniform(0.3, 0.6)
-    else:
-        # target_energy = 1.0  # Higher energy for clear or warm weather
-        target_energy = random.uniform(0.6, 1.0)
+	# Energy level based on weather condition and temperature
+	if 'rain' in weather_condition or 'snow' in weather_condition or temperature < 10:
+		# target_energy = 0.3  # Low energy for rainy, snowy or cold weather
+		target_energy = random.uniform(0, 0.3)
+	elif 10 <= temperature < 20:
+		# target_energy = 0.6  # Medium energy for moderate temperature
+		target_energy = random.uniform(0.3, 0.6)
+	else:
+		# target_energy = 1.0  # Higher energy for clear or warm weather
+		target_energy = random.uniform(0.6, 1.0)
 
-    # Valence (positivity) based on wind speed and cloudiness
-    if wind_speed > 8 or cloudiness > 80:
-        target_valence = 0.4  # Low valence for windy or highly cloudy weather
-    else:
-        target_valence = 0.7  # Higher valence for calm or less cloudy weather
+	# Valence (positivity) based on wind speed and cloudiness
+	if wind_speed > 8 or cloudiness > 80:
+		target_valence = 0.4  # Low valence for windy or highly cloudy weather
+	else:
+		target_valence = 0.7  # Higher valence for calm or less cloudy weather
 
-    headers = {'Authorization': f'Bearer {access_token}'}
-    params = {
-        'target_energy': target_energy,
-        'target_valence': target_valence
-    }
-    top_artists = get_top('artists', access_token)
-    top_tracks = get_top('tracks', access_token)
+	headers = {'Authorization': f'Bearer {access_token}'}
+	params = {
+		'target_energy': target_energy,
+		'target_valence': target_valence
+	}
+	top_artists = get_top('artists', access_token)
+	top_tracks = get_top('tracks', access_token)
 
-    seed_artists = [artist['id'] for artist in top_artists['items']]
-    seed_tracks = [track['id'] for track in top_tracks['items']]
-    if seed_artists:
-        params['seed_artists'] = seed_artists
-    if seed_genres:
-        params['seed_genres'] = seed_genres
-    if seed_tracks:
-        params['seed_tracks'] = seed_tracks
-    print(params)
-    response = requests.get('https://api.spotify.com/v1/recommendations', headers=headers, params=params)
-    response.raise_for_status()
-    data = response.json()
-    return data
+	seed_artists = [artist['id'] for artist in top_artists['items']]
+	seed_tracks = [track['id'] for track in top_tracks['items']]
+	if seed_artists:
+		params['seed_artists'] = seed_artists
+	if seed_genres:
+		params['seed_genres'] = seed_genres
+	if seed_tracks:
+		params['seed_tracks'] = seed_tracks
+	print(params)
+	response = requests.get('https://api.spotify.com/v1/recommendations', headers=headers, params=params)
+	response.raise_for_status()
+	data = response.json()
+	return data
 
 
 @app.route('/home')
 def home():
-    access_token = request.args.get("access_token")
-    city = request.args.get("city")
+	access_token = request.args.get("access_token")
+	city = request.args.get("city")
 	
-    if not access_token:
-        return jsonify({'error': 'Missing access token'})
+	if not access_token:
+		return jsonify({'error': 'Missing access token'})
 
-    if not city:
-        return jsonify({'error': 'Missing city'})
+	if not city:
+		return jsonify({'error': 'Missing city'})
 
-    try:
-        top_artists = get_top('artists', access_token)
-        top_tracks = get_top('tracks', access_token)
+	try:
+		top_artists = get_top('artists', access_token)
+		top_tracks = get_top('tracks', access_token)
 
-        seed_artists = [artist['id'] for artist in top_artists['items']]
-        seed_tracks = [track['id'] for track in top_tracks['items']]
-        recommendations = get_recommendations(city, seed_artists=seed_artists, seed_tracks=seed_tracks, access_token=access_token)
-        track_urls = [{'name': track['name'], 'external_url': track['external_urls']['spotify'], 'album_cover_url': track['album']['images'][0]['url']} for track in recommendations['tracks']]
-        return track_urls
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)})
+		seed_artists = [artist['id'] for artist in top_artists['items']]
+		seed_tracks = [track['id'] for track in top_tracks['items']]
+		recommendations = get_recommendations(city, seed_artists=seed_artists, seed_tracks=seed_tracks, access_token=access_token)
+		track_urls = [{'name': track['name'], 'external_url': track['external_urls']['spotify'], 'album_cover_url': track['album']['images'][0]['url']} for track in recommendations['tracks']]
+		return track_urls
+	except requests.exceptions.RequestException as e:
+		return jsonify({'error': str(e)})
 
 
 @app.route('/login-check')
@@ -180,11 +212,11 @@ def login_check():
 @app.route('/access_token')
 @cross_origin(supports_credentials=True)
 def access_token():
-    # Get the access token from the session
-    access_token = session.get('access_token')
-    
-    # Return the access token as a JSON object
-    return jsonify({'access_token': access_token})
+	# Get the access token from the session
+	access_token = session.get('access_token')
+	
+	# Return the access token as a JSON object
+	return jsonify({'access_token': access_token})
 
 
 @app.route('/')
@@ -223,16 +255,16 @@ def logout():
 @app.route('/get-weather/<city>')
 @cross_origin(supports_credentials=True)
 def get_weather_data(city):
-    geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={cred.weather_key}'
-    r = requests.get(geo_url)
-    r = r.json()
-    lat = r[0]["lat"]
-    long = r[0]["lon"]
-    weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={cred.weather_key}&units=metric"
-    r = requests.get(weather_url)
-    r = r.json()
+	geo_url = f'https://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={cred.weather_key}'
+	r = requests.get(geo_url)
+	r = r.json()
+	lat = r[0]["lat"]
+	long = r[0]["lon"]
+	weather_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={long}&appid={cred.weather_key}&units=metric"
+	r = requests.get(weather_url)
+	r = r.json()
 
-    return r
+	return r
 
 
 

@@ -23,8 +23,10 @@ coherent codebase.
 -Seamless integration with APIs: Node.js allows for efficient handling of asynch operations. It will simplify the integration with Spotify
 and Weather APIs.
 
--Strong community support and ecosystem: React and Node.js both have active communities that provide open-source libraries and other 
-resources that will make our development process easier and quicker. 
 
 Overall, using React for the frontend and Node.js with Express for the back end is a more cohesive and efficient technology stack for 
 our project requirements.
+
+**UPDATE**
+We switched our back end to Flask because we realized that we were more comfortable working with Python, and it worked well for our requirements.
+It maintained many of the strengths we had chosen Express for, but increased the ease of development for us. 

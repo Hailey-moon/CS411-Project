@@ -27,3 +27,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 **/cred.py
+
+**/spotify-weather-app-firebase-adminsdk-b0st6-63656bc401.json
